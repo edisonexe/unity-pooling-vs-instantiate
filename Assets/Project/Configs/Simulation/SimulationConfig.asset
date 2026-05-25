@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea718f1337e4e45bc33b9f346a3b966, type: 3}
   m_Name: SimulationConfig
   m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Domain.SimulationConfig
-  _prewarmCount: 500
-  _spawnInterval: 0.01
-  _fireRate: 0.005
+  _prewarmCount: 5000
+  _spawnInterval: 0.0025
+  _fireRate: 0.00017
   _fovAngle: 120
-  _spawnPointsCacheSize: 100
+  _spawnPointsCacheSize: 2000
