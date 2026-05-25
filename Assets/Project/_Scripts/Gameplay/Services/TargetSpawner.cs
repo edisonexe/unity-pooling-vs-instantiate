@@ -39,13 +39,14 @@ namespace PoolingBenchmark.Gameplay.Services
             if (!_isSpawning) return;
 
             _timer += Time.deltaTime;
-            if (_timer >= _config.SpawnInterval)
+            
+            while (_timer >= _config.SpawnInterval)
             {
-                _timer = 0f;
+                _timer -= _config.SpawnInterval;
                 SpawnRandomTarget();
             }
         }
-
+        
         private void SpawnRandomTarget()
         {
             Vector3 spawnPosition = _pointsProvider.GetRandomSpawnPoint();

@@ -28,7 +28,7 @@ namespace PoolingBenchmark.Gameplay.Systems
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _config = config ?? throw new ArgumentNullException(nameof(config));
 
-            if (_view.YawRoot != null)
+            if (_view.YawRoot)
             {
                 _lookRotation = _view.YawRoot.rotation;
             }
@@ -59,9 +59,9 @@ namespace PoolingBenchmark.Gameplay.Systems
             );
 
             _fireTimer += Time.deltaTime;
-            if (_fireTimer >= _config.FireRate)
+            while (_fireTimer >= _config.FireRate)
             {
-                _fireTimer = 0f;
+                _fireTimer -= _config.FireRate;
                 
                 _factory.CreateProjectile(_view.ShootingPoint.position, yawTransform.rotation, yawTransform.forward);
             }
