@@ -6,17 +6,17 @@ namespace PoolingBenchmark.Domain.Configs
     public sealed class SimulationConfig : ScriptableObject
     {
         [Header("Pool Options")]
-        [SerializeField] private int _prewarmCount = 500;
+        [SerializeField, Min(1)] private int _prewarmCount = 500;
 
         [Header("Spawner Options")]
-        [SerializeField] private float _spawnInterval = 0.5f;
+        [SerializeField, Min(0.001f)] private float _spawnInterval = 0.5f;
 
         [Header("Turret Options")]
-        [SerializeField] private float _fireRate = 0.01f;
-        [SerializeField] private float _fovAngle = 120f;
+        [SerializeField, Min(0.0001f)] private float _fireRate = 0.01f;
+        [SerializeField, Range(0f, 360f)] private float _fovAngle = 120f;
 
         [Header("Spawn Points Options")]
-        [SerializeField] private int _spawnPointsCacheSize = 100;
+        [SerializeField, Min(1)] private int _spawnPointsCacheSize = 100;
         
         public int PrewarmCount => _prewarmCount;
         public float SpawnInterval => _spawnInterval;
