@@ -13,6 +13,7 @@ namespace PoolingBenchmark.UI
         private readonly StressTestUIView _view;
         private readonly IStatsProvider _statsProvider;
         private readonly ISimulationController _controller;
+        private readonly IFPSMonitor _fpsMonitor;
         
         private ExecutionMode _cachedMode;
         private bool _isFirstUpdate = true;
@@ -30,20 +31,25 @@ namespace PoolingBenchmark.UI
         private const string T_AVAIL_TEMPLATE = "Available Targets: {0}";
         private const string P_REUSED_TEMPLATE = "Reused Proj: {0}";
         private const string T_REUSED_TEMPLATE = "Reused Targets: {0}";
+        
+        private const string FPS_TEMPLATE = "FPS: {0}";
 
         public StressTestUIPresenter(
             StressTestUIView view, 
             IStatsProvider statsProvider, 
-            ISimulationController controller)
+            ISimulationController controller,
+            IFPSMonitor fpsMonitor)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
             _statsProvider = statsProvider ?? throw new ArgumentNullException(nameof(statsProvider));
             _controller = controller ?? throw new ArgumentNullException(nameof(controller));
+            _fpsMonitor = fpsMonitor ?? throw new ArgumentNullException(nameof(fpsMonitor));
         }
 
         public void Initialize()
         {
             _statsProvider.OnStatsChanged += OnStatsUpdated;
+            _fpsMonitor.OnFPSChanged += OnFPSChanged;
             
             if (_view.ToggleBtn)
             {
@@ -60,10 +66,11 @@ namespace PoolingBenchmark.UI
 
         public void Dispose()
         {
-            if (_statsProvider != null)
-            {
+            if (_statsProvider != null) 
                 _statsProvider.OnStatsChanged -= OnStatsUpdated;
-            }
+            
+            if  (_fpsMonitor != null)
+                _fpsMonitor.OnFPSChanged -= OnFPSChanged;
             
             if (_view && _view.ToggleBtn)
             {
@@ -109,6 +116,14 @@ namespace PoolingBenchmark.UI
             }
         }
 
+        private void OnFPSChanged(int fps)
+        {
+            if (!_view.FPSText) 
+                return;
+
+            _view.FPSText.SetText(FPS_TEMPLATE, fps);
+        }
+        
         private void ToggleGroup(GameObject[] objects, bool isActive)
         {
             if (objects == null) return;

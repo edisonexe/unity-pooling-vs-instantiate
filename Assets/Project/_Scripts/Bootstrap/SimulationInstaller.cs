@@ -39,6 +39,9 @@ namespace PoolingBenchmark.Bootstrap
             Container.BindInterfacesAndSelfTo<PoolService>().FromInstance(_poolService).AsSingle();
             
             Container.BindInterfacesAndSelfTo<TurretView>().FromInstance(_turretView).AsSingle();
+            
+            Container.BindInterfacesTo<FPSMonitor>().AsSingle();
+            
             Container.BindInterfacesAndSelfTo<StressTestUIView>().FromInstance(_uiView).AsSingle();
             Container.BindInterfacesTo<PlaneSpawnPointsCache>().FromInstance(_spawnPointsCache).AsSingle();
             

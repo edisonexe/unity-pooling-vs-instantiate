@@ -26,6 +26,8 @@ namespace PoolingBenchmark.UI
         [SerializeField] private TMP_Text _reusedProjsText;
         [SerializeField] private TMP_Text _reusedTargetsText;
 
+        [SerializeField] private TMP_Text _fpsText;
+        
         [Header("Settings")]
         [SerializeField] private Button _toggleBtn;
 
@@ -44,6 +46,8 @@ namespace PoolingBenchmark.UI
         public TMP_Text AvailableTargetsText => _availableTargetsText;
         public TMP_Text ReusedProjsText => _reusedProjsText;
         public TMP_Text ReusedTargetsText => _reusedTargetsText;
+        
+        public TMP_Text FPSText => _fpsText;
         
         public Button ToggleBtn => _toggleBtn;
 
@@ -68,6 +72,7 @@ namespace PoolingBenchmark.UI
             if (!_availableTargetsText) Debug.LogError("[StressTestUIView] AvailableTargetsText reference is missing!", this);
             if (!_reusedProjsText) Debug.LogError("[StressTestUIView] ReusedProjsText reference is missing!", this);
             if (!_reusedTargetsText) Debug.LogError("[StressTestUIView] ReusedTargetsText reference is missing!", this);
+            if (!_fpsText)  Debug.LogError("[StressTestUIView] FPSText reference is missing!", this);
             if (!_toggleBtn) Debug.LogError("[StressTestUIView] ToggleBtn reference is missing!", this);
             
             if (_naiveOnlyRows == null || _naiveOnlyRows.Length == 0) 
