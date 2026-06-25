@@ -1,5 +1,4 @@
 ﻿using System;
-using PoolingBenchmark.Features.CoreSimulation;
 using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.Environment;

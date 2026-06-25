@@ -10,8 +10,8 @@ namespace PoolingBenchmark.Features.CoreSimulation.Interfaces
         int TargetNaiveCounter { get; }
         void SetMode(ExecutionMode mode);
         void ResetCounter();
-        Projectile CreateProjectile(Vector3 pos, Quaternion rot, Vector3 dir);
-        Target CreateTarget(Vector3 pos, Vector3 dir);
+        ProjectileEntity CreateProjectile(Vector3 pos, Quaternion rot, Vector3 dir);
+        TargetEntity CreateTarget(Vector3 pos, Vector3 dir);
         void Cleanup();
     }
 }

@@ -9,18 +9,18 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
     {
         public event Action OnChanged;
 
-        private readonly List<Projectile> _projectiles = new(4096);
-        private readonly List<Target> _targets = new(4096);
+        private readonly List<ProjectileEntity> _projectiles = new(4096);
+        private readonly List<TargetEntity> _targets = new(4096);
 
-        private readonly Dictionary<Projectile, int> _projectileIndices = new(4096);
-        private readonly Dictionary<Target, int> _targetIndices = new(4096);
+        private readonly Dictionary<ProjectileEntity, int> _projectileIndices = new(4096);
+        private readonly Dictionary<TargetEntity, int> _targetIndices = new(4096);
 
-        public IReadOnlyList<Projectile> Projectiles => _projectiles;
-        public IReadOnlyList<Target> Targets => _targets;
+        public IReadOnlyList<ProjectileEntity> Projectiles => _projectiles;
+        public IReadOnlyList<TargetEntity> Targets => _targets;
 
-        public void AddProjectile(Projectile p)
+        public void AddProjectile(ProjectileEntity p)
         {
-            if (!p) throw new ArgumentNullException(nameof(p));
+            if (p == null) throw new ArgumentNullException(nameof(p));
             if (_projectileIndices.ContainsKey(p)) return;
 
             _projectiles.Add(p);
@@ -28,14 +28,14 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             OnChanged?.Invoke();
         }
 
-        public void RemoveProjectile(Projectile p)
+        public void RemoveProjectile(ProjectileEntity p)
         {
-            if (!p || !_projectileIndices.TryGetValue(p, out int index)) return;
+            if (p == null || !_projectileIndices.TryGetValue(p, out int index)) return;
 
             int lastIndex = _projectiles.Count - 1;
             if (index != lastIndex)
             {
-                Projectile lastElement = _projectiles[lastIndex];
+                ProjectileEntity lastElement = _projectiles[lastIndex];
                 _projectiles[index] = lastElement;
                 _projectileIndices[lastElement] = index;
             }
@@ -45,9 +45,9 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             OnChanged?.Invoke();
         }
 
-        public void AddTarget(Target t)
+        public void AddTarget(TargetEntity t)
         {
-            if (!t) throw new ArgumentNullException(nameof(t));
+            if (t == null) throw new ArgumentNullException(nameof(t));
             if (_targetIndices.ContainsKey(t)) return;
 
             _targets.Add(t);
@@ -55,14 +55,14 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             OnChanged?.Invoke();
         }
 
-        public void RemoveTarget(Target t)
+        public void RemoveTarget(TargetEntity t)
         {
-            if (!t || !_targetIndices.TryGetValue(t, out int index)) return;
+            if (t == null || !_targetIndices.TryGetValue(t, out int index)) return;
 
             int lastIndex = _targets.Count - 1;
             if (index != lastIndex)
             {
-                Target lastElement = _targets[lastIndex];
+                TargetEntity lastElement = _targets[lastIndex];
                 _targets[index] = lastElement;
                 _targetIndices[lastElement] = index;
             }

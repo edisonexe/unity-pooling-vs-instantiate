@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using PoolingBenchmark.Features.CoreSimulation;
 using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.CoreSimulation.Services;
@@ -17,7 +16,7 @@ namespace PoolingBenchmark.Features.Weapons
         private readonly EntityRegistry _registry;
         private readonly SimulationConfig _config;
 
-        private Target _currentTarget;
+        private TargetEntity _currentTarget;
         private float _fireTimer;
         private Quaternion _lookRotation;
 
@@ -47,9 +46,9 @@ namespace PoolingBenchmark.Features.Weapons
                 _currentTarget = FindBestTarget(gunPos, gunForward);
             }
 
-            if (_currentTarget)
+            if (_currentTarget != null)
             {
-                UpdateTargetRotation(_currentTarget.transform.position, gunPos);
+                UpdateTargetRotation(_currentTarget.Position, gunPos);
             }
 
             yawTransform.rotation = Quaternion.RotateTowards(
@@ -67,11 +66,11 @@ namespace PoolingBenchmark.Features.Weapons
             }
         }
 
-        private bool IsTargetValid(Target target, Vector3 myPos, Vector3 myForward)
+        private bool IsTargetValid(TargetEntity target, Vector3 myPos, Vector3 myForward)
         {
-            if (!target || !target.gameObject.activeSelf) return false;
+            if (target == null || target.View == null || !target.View.gameObject.activeSelf) return false;
 
-            Vector3 diff = target.transform.position - myPos;
+            Vector3 diff = target.Position - myPos;
             float sqrDist = diff.sqrMagnitude;
             if (sqrDist < 0.001f) return false;
 
@@ -92,21 +91,21 @@ namespace PoolingBenchmark.Features.Weapons
             }
         }
 
-        private Target FindBestTarget(Vector3 myPos, Vector3 myForward)
+        private TargetEntity FindBestTarget(Vector3 myPos, Vector3 myForward)
         {
-            Target best = null;
+            TargetEntity best = null;
             float minScore = float.MaxValue;
             float minCosThreshold = Mathf.Cos(_config.FovAngle * 0.5f * Mathf.Deg2Rad);
-            
-            IReadOnlyList<Target> targets = _registry.Targets;
+
+            IReadOnlyList<TargetEntity> targets = _registry.Targets; 
             int count = targets.Count;
 
             for (int i = 0; i < count; i++)
             {
-                Target t = targets[i];
-                if (!t || !t.gameObject.activeSelf) continue;
+                TargetEntity t = targets[i];
+                if (t == null || t.View == null || !t.View.gameObject.activeSelf) continue;
 
-                Vector3 diff = t.transform.position - myPos;
+                Vector3 diff = t.Position - myPos;
                 float sqrDist = diff.sqrMagnitude;
 
                 float distance = Mathf.Sqrt(sqrDist);

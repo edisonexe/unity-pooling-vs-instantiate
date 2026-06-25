@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.Projectiles;
 using PoolingBenchmark.Features.Targets;
+using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Infrastructure.Pooling;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -14,12 +15,13 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
         private readonly PoolService _pools;
         private readonly EntityRegistry _registry;
         private readonly SimulationContainers _containers;
+        private readonly SimulationConfig _config;
         
-        private readonly Action<Projectile> _projectileReleaseCache;
-        private readonly Action<Target> _targetReleaseCache;
+        private readonly Action<ProjectileEntity> _projectileReleaseCache;
+        private readonly Action<TargetEntity> _targetReleaseCache;
 
-        private readonly List<Projectile> _projectileCleanupBuffer = new(4096);
-        private readonly List<Target> _targetCleanupBuffer = new(4096);
+        private readonly List<ProjectileEntity> _projectileCleanupBuffer = new(4096);
+        private readonly List<TargetEntity> _targetCleanupBuffer = new(4096);
 
         private ExecutionMode _mode;
         private int _projNaiveCounter;
@@ -28,11 +30,12 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
         public int ProjNaiveCounter => _projNaiveCounter;
         public int TargetNaiveCounter => _targetNaiveCounter;
 
-        public EntityFactory(PoolService pools, EntityRegistry registry, SimulationContainers containers)
+        public EntityFactory(PoolService pools, EntityRegistry registry, SimulationContainers containers, SimulationConfig config)
         {
             _pools = pools ?? throw new ArgumentNullException(nameof(pools));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _containers = containers ?? throw new ArgumentNullException(nameof(containers));
+            _config = config ?? throw new ArgumentNullException(nameof(config));
             
             _projectileReleaseCache = ReleaseProjectile;
             _targetReleaseCache = ReleaseTarget;
@@ -46,56 +49,97 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             _targetNaiveCounter = 0;
         }
 
-        public Projectile CreateProjectile(Vector3 pos, Quaternion rot, Vector3 dir)
+        public ProjectileEntity CreateProjectile(Vector3 pos, Quaternion rot, Vector3 dir)
         {
-            Projectile proj = _mode == ExecutionMode.Pool
-                ? _pools.ProjectilePool.Get()
-                : Object.Instantiate(_pools.ProjectilePool.Prefab, _containers.ProjectileContainer);
+            ProjectileView view;
 
-            if (_mode == ExecutionMode.Naive) 
+            if (_mode == ExecutionMode.Pool)
+            {
+                view = _pools.ProjectilePool.Get();
+            }
+            else
+            {
+                view = Object.Instantiate(_pools.ProjectilePool.Prefab, _containers.ProjectileContainer);
                 _projNaiveCounter++;
+                view.Show();
+            }
 
-            proj.Init(pos, rot, dir, _projectileReleaseCache);
-            proj.gameObject.SetActive(true);
+            ProjectileEntity projectileEntity = new ProjectileEntity(
+                pos,
+                rot,
+                dir,
+                _config.ProjectileSpeed,
+                _config.ProjectileMaxLifetime,
+                view,
+                _projectileReleaseCache
+            );
 
-            _registry.AddProjectile(proj);
-            return proj;
+            _registry.AddProjectile(projectileEntity);
+            return projectileEntity;
         }
-
-        public Target CreateTarget(Vector3 pos, Vector3 dir)
+        
+        public TargetEntity CreateTarget(Vector3 pos, Vector3 dir)
         {
-            Target target = _mode == ExecutionMode.Pool
-                ? _pools.TargetPool.Get()
-                : Object.Instantiate(_pools.TargetPool.Prefab, _containers.TargetContainer);
+            TargetView view;
 
-            if (_mode == ExecutionMode.Naive) 
+            if (_mode == ExecutionMode.Pool)
+            {
+                view = _pools.TargetPool.Get();
+            }
+            else
+            {
+                view = Object.Instantiate(_pools.TargetPool.Prefab, _containers.TargetContainer);
                 _targetNaiveCounter++;
+                view.Show();
+            }
 
-            target.Init(pos, dir, _targetReleaseCache);
-            target.gameObject.SetActive(true);
+            TargetEntity targetEntity = new TargetEntity(
+                pos, 
+                dir, 
+                _config.TargetSpeed, 
+                view, 
+                _targetReleaseCache
+            );
             
-            _registry.AddTarget(target);
-            return target;
+            _registry.AddTarget(targetEntity);
+            return targetEntity;
         }
 
-        private void ReleaseProjectile(Projectile p)
+        private void ReleaseProjectile(ProjectileEntity p)
         {
+            if (p == null) return;
             _registry.RemoveProjectile(p);
 
             if (_mode == ExecutionMode.Pool) 
-                _pools.ProjectilePool.Return(p);
+            {
+                _pools.ProjectilePool.Return(p.View);
+            }
             else 
-                Object.Destroy(p.gameObject);
+            {
+                if (p.View != null)
+                {
+                    Object.Destroy(p.View.gameObject);
+                }
+            }
         }
 
-        private void ReleaseTarget(Target t)
+        private void ReleaseTarget(TargetEntity t)
         {
+            if (t == null) return;
+
             _registry.RemoveTarget(t);
 
             if (_mode == ExecutionMode.Pool) 
-                _pools.TargetPool.Return(t);
+            {
+                _pools.TargetPool.Return(t.View);
+            }
             else 
-                Object.Destroy(t.gameObject);
+            {
+                if (t.View != null)
+                {
+                    Object.Destroy(t.View.gameObject);
+                }
+            }
         }
 
         public void Cleanup()
@@ -103,14 +147,14 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             _projectileCleanupBuffer.Clear();
             _targetCleanupBuffer.Clear();
 
-            IReadOnlyList<Projectile> activeProjs = _registry.Projectiles;
+            IReadOnlyList<ProjectileEntity> activeProjs = _registry.Projectiles;
             int projCount = activeProjs.Count;
             for (int i = 0; i < projCount; i++)
             {
                 _projectileCleanupBuffer.Add(activeProjs[i]);
             }
 
-            IReadOnlyList<Target> activeTargets = _registry.Targets;
+            IReadOnlyList<TargetEntity> activeTargets = _registry.Targets;
             int targetCount = activeTargets.Count;
             for (int i = 0; i < targetCount; i++)
             {

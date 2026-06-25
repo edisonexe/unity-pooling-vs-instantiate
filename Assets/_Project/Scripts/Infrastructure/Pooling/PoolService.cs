@@ -1,5 +1,4 @@
 ﻿using System;
-using PoolingBenchmark.Features.CoreSimulation;
 using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.Projectiles;
 using PoolingBenchmark.Features.Targets;
@@ -12,15 +11,15 @@ namespace PoolingBenchmark.Infrastructure.Pooling
     public sealed class PoolService : MonoBehaviour, IInitializable
     {
         [Header("Prefabs")]
-        [SerializeField] private Projectile _projectilePrefab;
-        [SerializeField] private Target _targetPrefab;
+        [SerializeField] private ProjectileView _projectilePrefab;
+        [SerializeField] private TargetView _targetPrefab;
         
         private SimulationConfig _config;
         private SimulationContainers _containers;
         private bool _isPrewarmed;
 
-        public ObjectPool<Projectile> ProjectilePool { get; private set; }
-        public ObjectPool<Target> TargetPool { get; private set; }
+        public ObjectPool<ProjectileView> ProjectilePool { get; private set; }
+        public ObjectPool<TargetView> TargetPool { get; private set; }
 
         [Inject]
         public void Init(SimulationConfig config, SimulationContainers containers)
@@ -33,8 +32,8 @@ namespace PoolingBenchmark.Infrastructure.Pooling
         {
             ValidateContexts();
             
-            ProjectilePool = new ObjectPool<Projectile>(_projectilePrefab, _containers.ProjectileContainer);
-            TargetPool = new ObjectPool<Target>(_targetPrefab, _containers.TargetContainer);
+            ProjectilePool = new ObjectPool<ProjectileView>(_projectilePrefab, _containers.ProjectileContainer);
+            TargetPool = new ObjectPool<TargetView>(_targetPrefab, _containers.TargetContainer);
         }
 
         public void Prewarm()

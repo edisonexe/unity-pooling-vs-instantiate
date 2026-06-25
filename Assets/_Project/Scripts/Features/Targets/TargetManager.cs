@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using PoolingBenchmark.Features.CoreSimulation;
 using PoolingBenchmark.Features.CoreSimulation.Services;
+using PoolingBenchmark.Infrastructure.Collections;
+using PoolingBenchmark.Features.Environment;
 using UnityEngine;
 using Zenject;
 
@@ -10,23 +11,48 @@ namespace PoolingBenchmark.Features.Targets
     public sealed class TargetManager : ITickable
     {
         private readonly EntityRegistry _registry;
+        private readonly SpatialGrid _grid;
+        private readonly ArenaBoundary _boundary;
+        
+        private readonly List<TargetEntity> _outOfBoundsBuffer = new(256);
 
-        public TargetManager(EntityRegistry registry)
+        public TargetManager(EntityRegistry registry, SpatialGrid grid, ArenaBoundary boundary)
         {
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
+            _grid = grid ?? throw new ArgumentNullException(nameof(grid));
+            _boundary = boundary ?? throw new ArgumentNullException(nameof(boundary));
         }
 
         public void Tick()
         {
             float deltaTime = Time.deltaTime;
-            IReadOnlyList<Target> targets = _registry.Targets;
+            IReadOnlyList<TargetEntity> targets = _registry.Targets;
             int count = targets.Count;
+            
+            _grid.Clear();
+            _outOfBoundsBuffer.Clear();
 
             for (int i = 0; i < count; i++)
             {
-                Target t = targets[i];
+                TargetEntity t = targets[i];
+                
+                Vector3 newPosition = t.Position + t.MoveDirection * (t.Speed * deltaTime);
+                t.UpdatePosition(newPosition);
 
-                t.transform.Translate(t.MoveDirection * (t.Speed * deltaTime), Space.World);
+                if (!_boundary.IsInside(t.Position))
+                {
+                    _outOfBoundsBuffer.Add(t);
+                }
+                else
+                {
+                    _grid.Insert(t);
+                }
+            }
+
+            int removeCount = _outOfBoundsBuffer.Count;
+            for (int i = 0; i < removeCount; i++)
+            {
+                _outOfBoundsBuffer[i].Despawn();
             }
         }
     }
