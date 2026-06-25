@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 3750181707039914699}
   - component: {fileID: 7407940099856259532}
   - component: {fileID: 8591496944827749053}
-  - component: {fileID: 668572562228446318}
-  - component: {fileID: 8396333909719650194}
+  - component: {fileID: 2175902949974084500}
   m_Layer: 7
   m_Name: Projectile
   m_TagString: Projectile
@@ -92,28 +91,7 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &668572562228446318
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 214455659903937315}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8396333909719650194
+--- !u!114 &2175902949974084500
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,9 +100,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 214455659903937315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51ebd3118f4a408f929f5aaf3965f615, type: 3}
+  m_Script: {fileID: 11500000, guid: 92fa49e76cb34d58b880175393f763b7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Gameplay.Entities.Projectile
-  _speed: 35
-  _maxLifetime: 3
-  _radius: 0.14
+  m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Features.Projectiles.ProjectileView

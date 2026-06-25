@@ -119,51 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &76566410
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 76566412}
-  - component: {fileID: 76566411}
-  m_Layer: 0
-  m_Name: Plane Spawn Points Cache
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &76566411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 76566410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91477007730a454d90b829a33941e517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Gameplay.Entities.PlaneSpawnPointsCache
-  _planeTransform: {fileID: 1892571973}
---- !u!4 &76566412
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 76566410}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1436905645}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &76743699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1171,6 +1126,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 623578567}
   m_CullTransparentMesh: 1
+--- !u!1 &692590963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 692590964}
+  - component: {fileID: 692590965}
+  m_Layer: 0
+  m_Name: Arena Boundary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &692590964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692590963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1436905645}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &692590965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692590963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dc35f9a70d54182b386a8099b6ac70f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Features.Environment.ArenaBoundary
+  _widthX: 35
+  _longtudeZ: 40
+  _gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+  _showGizmos: 1
 --- !u!1 &753485934
 GameObject:
   m_ObjectHideFlags: 0
@@ -2399,7 +2402,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2092598882}
-  - {fileID: 76566412}
+  - {fileID: 692590964}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1451014764
@@ -2995,9 +2998,9 @@ MonoBehaviour:
   _config: {fileID: 11400000, guid: db7b7d788325bb24ca51fb3b53f93010, type: 2}
   _poolService: {fileID: 2092598883}
   _turretView: {fileID: 1475913944}
-  _spawnPointsCache: {fileID: 76566411}
   _uiView: {fileID: 753485939}
   _containers: {fileID: 1108755600}
+  _arenaBoundary: {fileID: 692590965}
 --- !u!114 &1655966719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3610,8 +3613,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d9b189278c452bb600a2512f3473ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Gameplay.Systems.PoolSystem
-  _projectilePrefab: {fileID: 8396333909719650194, guid: 08d422363bd66fd4980abac3965dca06, type: 3}
-  _targetPrefab: {fileID: 4979447592331339752, guid: 1120276a1292f834ea17edf3133071c8, type: 3}
+  _projectilePrefab: {fileID: 2175902949974084500, guid: 08d422363bd66fd4980abac3965dca06, type: 3}
+  _targetPrefab: {fileID: 8316145682860978767, guid: 1120276a1292f834ea17edf3133071c8, type: 3}
 --- !u!1 &2135902167
 GameObject:
   m_ObjectHideFlags: 0
