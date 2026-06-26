@@ -14,6 +14,10 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
         private readonly PoolService _pools;
 
         private ExecutionMode _currentMode = ExecutionMode.Naive;
+        private bool _isSimulationStarted;
+
+        public event Action OnSimulationStarted;
+        public bool IsSimulationStarted => _isSimulationStarted;
 
         public SimulationController(
             IEntityFactory factory, 
@@ -29,6 +33,16 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             ApplyMode(_currentMode);
         }
 
+        public void StartSimulation()
+        {
+            if (_isSimulationStarted) return;
+            
+            _isSimulationStarted = true;
+            _spawner.StartSpawning();
+            
+            OnSimulationStarted?.Invoke();
+        }
+        
         public void ToggleMode()
         {
             _spawner.StopSpawning();
