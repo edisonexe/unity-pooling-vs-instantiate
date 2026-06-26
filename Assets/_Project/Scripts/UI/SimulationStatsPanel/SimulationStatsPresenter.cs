@@ -1,26 +1,27 @@
 ﻿using System;
 using PoolingBenchmark.Features.CoreSimulation;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
-using PoolingBenchmark.Features.PerformanceStats;
 using PoolingBenchmark.Features.PerformanceStats.Interfaces;
 using PoolingBenchmark.Features.PerformanceStats.Models;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
-namespace PoolingBenchmark.UI
+namespace PoolingBenchmark.Scripts.UI.SimulationStatsPanel
 {
-    public sealed class StressTestUIPresenter : IInitializable, IDisposable
+    public sealed class SimulationStatsPresenter : IInitializable, IDisposable
     {
-        private readonly StressTestUIView _view;
+        private readonly SimulationStatsView _view;
         private readonly IStatsProvider _statsProvider;
-        private readonly ISimulationController _controller;
         private readonly IFPSMonitor _fpsMonitor;
+        private readonly ISimulationController _controller;
         
         private ExecutionMode _cachedMode;
         private bool _isFirstUpdate = true;
+        private bool _isActive;
         
         private static readonly string[] _modeDisplayStrings = { "Mode: Naive", "Mode: Pool" };
+        
+        private const string FPS_TEMPLATE = "FPS: {0}";
         
         private const string ACT_P_TEMPLATE = "Active Projectiles: {0}";
         private const string ACT_T_TEMPLATE = "Active Targets: {0}";
@@ -33,55 +34,45 @@ namespace PoolingBenchmark.UI
         private const string T_AVAIL_TEMPLATE = "Available Targets: {0}";
         private const string P_REUSED_TEMPLATE = "Reused Proj: {0}";
         private const string T_REUSED_TEMPLATE = "Reused Targets: {0}";
-        
-        private const string FPS_TEMPLATE = "FPS: {0}";
 
-        public StressTestUIPresenter(
-            StressTestUIView view, 
-            IStatsProvider statsProvider, 
-            ISimulationController controller,
-            IFPSMonitor fpsMonitor)
+        public SimulationStatsPresenter(
+            SimulationStatsView view, 
+            IStatsProvider statsProvider,
+            IFPSMonitor fpsMonitor,
+            ISimulationController controller)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
             _statsProvider = statsProvider ?? throw new ArgumentNullException(nameof(statsProvider));
-            _controller = controller ?? throw new ArgumentNullException(nameof(controller));
             _fpsMonitor = fpsMonitor ?? throw new ArgumentNullException(nameof(fpsMonitor));
+            _controller = controller ?? throw new ArgumentNullException(nameof(controller));
         }
 
         public void Initialize()
         {
             _statsProvider.OnStatsChanged += OnStatsUpdated;
             _fpsMonitor.OnFPSChanged += OnFPSChanged;
+            _controller.OnSimulationStarted += ActivateStatsPanel;
             
-            if (_view.ToggleBtn)
-            {
-                _view.ToggleBtn.onClick.AddListener(_controller.ToggleMode);
-            }
-
-            if (_view.StatsPanel)
-            {
-                _view.StatsPanel.SetActive(true);
-            }
-            
-            _statsProvider.UpdateStats();
+            _view.Hide();
         }
 
         public void Dispose()
         {
-            if (_statsProvider != null) 
-                _statsProvider.OnStatsChanged -= OnStatsUpdated;
-            
-            if  (_fpsMonitor != null)
-                _fpsMonitor.OnFPSChanged -= OnFPSChanged;
-            
-            if (_view && _view.ToggleBtn)
-            {
-                _view.ToggleBtn.onClick.RemoveListener(_controller.ToggleMode);
-            }
+            if (_statsProvider != null) _statsProvider.OnStatsChanged -= OnStatsUpdated;
+            if (_fpsMonitor != null) _fpsMonitor.OnFPSChanged -= OnFPSChanged;
+            if (_controller != null) _controller.OnSimulationStarted -= ActivateStatsPanel;
         }
 
+        private void ActivateStatsPanel()
+        {
+            _isActive = true;
+            _view.Show();
+            _statsProvider.UpdateStats();
+        }
+        
         private void OnStatsUpdated(SimulationStats stats)
         {
+            if (!_isActive || !_view.ExecModeText) return;
             if (!_view.ExecModeText) return;
 
             bool isModeChanged = _isFirstUpdate || _cachedMode != stats.Mode;

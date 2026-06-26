@@ -1,16 +1,16 @@
-﻿using PoolingBenchmark.Features.CoreSimulation;
-using PoolingBenchmark.Features.CoreSimulation.Configs;
+﻿using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.CoreSimulation.Services;
 using PoolingBenchmark.Features.Environment;
-using PoolingBenchmark.Features.PerformanceStats;
 using PoolingBenchmark.Features.PerformanceStats.Services;
 using PoolingBenchmark.Features.Projectiles;
 using PoolingBenchmark.Features.Targets;
 using PoolingBenchmark.Features.Weapons;
 using PoolingBenchmark.Infrastructure.Collections;
 using PoolingBenchmark.Infrastructure.Pooling;
-using PoolingBenchmark.UI;
+using PoolingBenchmark.Scripts.UI.SimulationStatsPanel;
+using PoolingBenchmark.UI.ControlPanel;
+using PoolingBenchmark.UI.StartScreen;
 using UnityEngine;
 using Zenject;
 
@@ -23,9 +23,13 @@ namespace PoolingBenchmark.Infrastructure.DI
 
         [Header("Scene Component Contexts")]
         [SerializeField] private PoolService _poolService;
-        [SerializeField] private TurretView _turretView;
-        [SerializeField] private StressTestUIView _uiView;
         [SerializeField] private SimulationContainers _containers;
+        [SerializeField] private TurretView _turretView;
+        
+        [Header("UI Views")]
+        [SerializeField] private StartScreenView _startScreenView;
+        [SerializeField] private ControlPanelView _controlPanelView;
+        [SerializeField] private SimulationStatsView _simulationStatsView;
         
         [Header("Boundary")]
         [SerializeField] private ArenaBoundary _arenaBoundary;
@@ -44,10 +48,14 @@ namespace PoolingBenchmark.Infrastructure.DI
 
             Container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
             Container.Bind<ISimulationController>().To<SimulationController>().AsSingle();
+            Container.Bind<TurretView>().FromInstance(_turretView).AsSingle();
             
-            Container.BindInterfacesAndSelfTo<TurretView>().FromInstance(_turretView).AsSingle();
-            Container.BindInterfacesAndSelfTo<StressTestUIView>().FromInstance(_uiView).AsSingle();
-            Container.BindInterfacesTo<StressTestUIPresenter>().AsSingle();
+            Container.Bind<StartScreenView>().FromInstance(_startScreenView).AsSingle();
+            Container.Bind<ControlPanelView>().FromInstance(_controlPanelView).AsSingle();
+            Container.Bind<SimulationStatsView>().FromInstance(_simulationStatsView).AsSingle();
+            Container.BindInterfacesTo<StartScreenPresenter>().AsSingle().NonLazy();
+            Container.BindInterfacesTo<ControlPanelPresenter>().AsSingle().NonLazy();
+            Container.BindInterfacesTo<SimulationStatsPresenter>().AsSingle().NonLazy();
             
             Container.BindInterfacesTo<FPSMonitor>().AsSingle();
             Container.BindInterfacesAndSelfTo<TargetSpawner>().AsSingle();
@@ -55,8 +63,6 @@ namespace PoolingBenchmark.Infrastructure.DI
             Container.BindInterfacesAndSelfTo<ProjectileManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<TurretSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<StatsCollector>().AsSingle();
-            
-            Container.BindInterfacesTo<SimulationStartup>().AsSingle().NonLazy();
         }
 
         private void ValidateContexts()
@@ -65,7 +71,9 @@ namespace PoolingBenchmark.Infrastructure.DI
             if (!_containers) Debug.LogError("[SimulationInstaller] SimulationContainers reference is missing!", this);
             if (!_poolService) Debug.LogError("[SimulationInstaller] PoolService reference is missing!", this);
             if (!_turretView) Debug.LogError("[SimulationInstaller] TurretView reference is missing!", this);
-            if (!_uiView) Debug.LogError("[SimulationInstaller] StressTestUIView reference is missing!", this);
+            if (!_startScreenView) Debug.LogError("[SimulationInstaller] StartScreenView reference is missing!", this);
+            if (!_controlPanelView) Debug.LogError("[SimulationInstaller] ControlPanelView reference is missing!", this);
+            if (!_simulationStatsView) Debug.LogError("[SimulationInstaller] SimulationStatsView reference is missing!", this);
             if (!_arenaBoundary) Debug.LogError("[SimulationInstaller] ArenaBoundary reference is missing!", this);
         }
     }

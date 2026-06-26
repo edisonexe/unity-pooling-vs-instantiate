@@ -1,20 +1,19 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using Zenject;
+﻿using TMPro;
+using UnityEngine;
 
-namespace PoolingBenchmark.UI
+namespace PoolingBenchmark.Scripts.UI.SimulationStatsPanel
 {
-    [AddComponentMenu("PoolingBenchmark/UI/Stress Test UI View")]
-    public sealed class StressTestUIView : MonoBehaviour, IInitializable
+    [AddComponentMenu("PoolingBenchmark/UI/Simulation Stats View")]
+    public sealed class SimulationStatsView : MonoBehaviour
     {
         [Header("UI Containers")]
-        [SerializeField] private GameObject _statsPanel;
+        [SerializeField] private GameObject _contentRoot;
         [SerializeField] private GameObject[] _naiveOnlyRows;
         [SerializeField] private GameObject[] _poolOnlyRows;
 
         [Header("Text Rows")]
         [SerializeField] private TMP_Text _execModeText;
+        [SerializeField] private TMP_Text _fpsText;
         [SerializeField] private TMP_Text _activeProjsText;
         [SerializeField] private TMP_Text _activeTargetsText;
         [SerializeField] private TMP_Text _totalCreatedProjsText;
@@ -26,16 +25,13 @@ namespace PoolingBenchmark.UI
         [SerializeField] private TMP_Text _reusedProjsText;
         [SerializeField] private TMP_Text _reusedTargetsText;
 
-        [SerializeField] private TMP_Text _fpsText;
-        
-        [Header("Settings")]
-        [SerializeField] private Button _toggleBtn;
 
-        public GameObject StatsPanel => _statsPanel;
+        public GameObject ContentRoot => _contentRoot;
         public GameObject[] NaiveOnlyRows => _naiveOnlyRows;
         public GameObject[] PoolOnlyRows => _poolOnlyRows;
         
         public TMP_Text ExecModeText => _execModeText;
+        public TMP_Text FPSText => _fpsText;
         public TMP_Text ActiveProjsText => _activeProjsText;
         public TMP_Text ActiveTargetsText => _activeTargetsText;
         public TMP_Text TotalCreatedProjsText => _totalCreatedProjsText;
@@ -46,21 +42,13 @@ namespace PoolingBenchmark.UI
         public TMP_Text AvailableTargetsText => _availableTargetsText;
         public TMP_Text ReusedProjsText => _reusedProjsText;
         public TMP_Text ReusedTargetsText => _reusedTargetsText;
-        
-        public TMP_Text FPSText => _fpsText;
-        
-        public Button ToggleBtn => _toggleBtn;
 
-        public void Initialize()
+        public void Show() => _contentRoot.SetActive(true);
+        public void Hide() => _contentRoot.SetActive(false);
+
+        private void OnValidate()
         {
-            ValidateInspector();
-            
-            if (_statsPanel) _statsPanel.SetActive(false);
-        }
-        
-        private void ValidateInspector()
-        {
-            if (!_statsPanel) Debug.LogError("[StressTestUIView] Stats Panel GameObject reference is missing!", this);
+            if (!_contentRoot) Debug.LogError("[StressTestUIView] Stats Panel GameObject reference is missing!", this);
             if (!_execModeText) Debug.LogError("[StressTestUIView] ExecModeText reference is missing!", this);
             if (!_activeProjsText) Debug.LogError("[StressTestUIView] ActiveProjsText reference is missing!", this);
             if (!_activeTargetsText) Debug.LogError("[StressTestUIView] ActiveTargetsText reference is missing!", this);
@@ -73,7 +61,6 @@ namespace PoolingBenchmark.UI
             if (!_reusedProjsText) Debug.LogError("[StressTestUIView] ReusedProjsText reference is missing!", this);
             if (!_reusedTargetsText) Debug.LogError("[StressTestUIView] ReusedTargetsText reference is missing!", this);
             if (!_fpsText)  Debug.LogError("[StressTestUIView] FPSText reference is missing!", this);
-            if (!_toggleBtn) Debug.LogError("[StressTestUIView] ToggleBtn reference is missing!", this);
             
             if (_naiveOnlyRows == null || _naiveOnlyRows.Length == 0) 
                 Debug.LogError("[StressTestUIView] Naive Only Rows array is unassigned or empty!", this);
