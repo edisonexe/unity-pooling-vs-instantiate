@@ -6,7 +6,7 @@ using PoolingBenchmark.Features.PerformanceStats.Models;
 using UnityEngine;
 using Zenject;
 
-namespace PoolingBenchmark.Scripts.UI.SimulationStatsPanel
+namespace PoolingBenchmark.UI.SimulationStatsPanel
 {
     public sealed class SimulationStatsPresenter : IInitializable, IDisposable
     {
@@ -73,7 +73,6 @@ namespace PoolingBenchmark.Scripts.UI.SimulationStatsPanel
         private void OnStatsUpdated(SimulationStats stats)
         {
             if (!_isActive || !_view.ExecModeText) return;
-            if (!_view.ExecModeText) return;
 
             bool isModeChanged = _isFirstUpdate || _cachedMode != stats.Mode;
 

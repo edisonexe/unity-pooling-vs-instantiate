@@ -49,9 +49,9 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             _factory.Cleanup();
 
             _currentMode = _currentMode == ExecutionMode.Naive ? ExecutionMode.Pool : ExecutionMode.Naive;
-            
             ApplyMode(_currentMode);
-            _spawner.StartSpawning();
+            
+            if (_isSimulationStarted) _spawner.StartSpawning();
         }
 
         private void ApplyMode(ExecutionMode mode)

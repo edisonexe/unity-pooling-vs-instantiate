@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace PoolingBenchmark.Scripts.UI.SimulationStatsPanel
+namespace PoolingBenchmark.UI.SimulationStatsPanel
 {
     [AddComponentMenu("PoolingBenchmark/UI/Simulation Stats View")]
     public sealed class SimulationStatsView : MonoBehaviour
@@ -48,25 +48,25 @@ namespace PoolingBenchmark.Scripts.UI.SimulationStatsPanel
 
         private void OnValidate()
         {
-            if (!_contentRoot) Debug.LogError("[StressTestUIView] Stats Panel GameObject reference is missing!", this);
-            if (!_execModeText) Debug.LogError("[StressTestUIView] ExecModeText reference is missing!", this);
-            if (!_activeProjsText) Debug.LogError("[StressTestUIView] ActiveProjsText reference is missing!", this);
-            if (!_activeTargetsText) Debug.LogError("[StressTestUIView] ActiveTargetsText reference is missing!", this);
-            if (!_totalCreatedProjsText) Debug.LogError("[StressTestUIView] TotalCreatedProjsText reference is missing!", this);
-            if (!_totalCreatedTargetsText) Debug.LogError("[StressTestUIView] TotalCreatedTargetsText reference is missing!", this);
-            if (!_projsPoolSizeText) Debug.LogError("[StressTestUIView] ProjsPoolSizeText reference is missing!", this);
-            if (!_targetsPoolSizeText) Debug.LogError("[StressTestUIView] TargetsPoolSizeText reference is missing!", this);
-            if (!_availableProjsText) Debug.LogError("[StressTestUIView] AvailableProjsText reference is missing!", this);
-            if (!_availableTargetsText) Debug.LogError("[StressTestUIView] AvailableTargetsText reference is missing!", this);
-            if (!_reusedProjsText) Debug.LogError("[StressTestUIView] ReusedProjsText reference is missing!", this);
-            if (!_reusedTargetsText) Debug.LogError("[StressTestUIView] ReusedTargetsText reference is missing!", this);
-            if (!_fpsText)  Debug.LogError("[StressTestUIView] FPSText reference is missing!", this);
+            if (!_contentRoot) Debug.LogError("[SimulationStatsView] Stats Panel GameObject reference is missing!", this);
+            if (!_execModeText) Debug.LogError("[SimulationStatsView] ExecModeText reference is missing!", this);
+            if (!_activeProjsText) Debug.LogError("[SimulationStatsView] ActiveProjsText reference is missing!", this);
+            if (!_activeTargetsText) Debug.LogError("[SimulationStatsView] ActiveTargetsText reference is missing!", this);
+            if (!_totalCreatedProjsText) Debug.LogError("[SimulationStatsView] TotalCreatedProjsText reference is missing!", this);
+            if (!_totalCreatedTargetsText) Debug.LogError("[SimulationStatsView] TotalCreatedTargetsText reference is missing!", this);
+            if (!_projsPoolSizeText) Debug.LogError("[SimulationStatsView] ProjsPoolSizeText reference is missing!", this);
+            if (!_targetsPoolSizeText) Debug.LogError("[SimulationStatsView] TargetsPoolSizeText reference is missing!", this);
+            if (!_availableProjsText) Debug.LogError("[SimulationStatsView] AvailableProjsText reference is missing!", this);
+            if (!_availableTargetsText) Debug.LogError("[SimulationStatsView] AvailableTargetsText reference is missing!", this);
+            if (!_reusedProjsText) Debug.LogError("[SimulationStatsView] ReusedProjsText reference is missing!", this);
+            if (!_reusedTargetsText) Debug.LogError("[SimulationStatsView] ReusedTargetsText reference is missing!", this);
+            if (!_fpsText)  Debug.LogError("[SimulationStatsView] FPSText reference is missing!", this);
             
             if (_naiveOnlyRows == null || _naiveOnlyRows.Length == 0) 
-                Debug.LogError("[StressTestUIView] Naive Only Rows array is unassigned or empty!", this);
+                Debug.LogError("[SimulationStatsView] Naive Only Rows array is unassigned or empty!", this);
                 
             if (_poolOnlyRows == null || _poolOnlyRows.Length == 0) 
-                Debug.LogError("[StressTestUIView] Pool Only Rows array is unassigned or empty!", this);
+                Debug.LogError("[SimulationStatsView] Pool Only Rows array is unassigned or empty!", this);
         }
     }
 }

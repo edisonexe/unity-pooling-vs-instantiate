@@ -2,7 +2,7 @@
 using PoolingBenchmark.Features.Targets;
 using UnityEngine;
 
-namespace PoolingBenchmark.Infrastructure.Collections
+namespace PoolingBenchmark.Features.Environment
 {
     public sealed class SpatialGrid
     {

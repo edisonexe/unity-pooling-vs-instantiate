@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using PoolingBenchmark.Features.CoreSimulation.Services;
-using PoolingBenchmark.Infrastructure.Collections;
 using PoolingBenchmark.Features.Environment;
 using UnityEngine;
 using Zenject;

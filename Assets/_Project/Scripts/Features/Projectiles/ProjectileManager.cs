@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.CoreSimulation.Services;
-using PoolingBenchmark.Infrastructure.Collections;
+using PoolingBenchmark.Features.Environment;
 using PoolingBenchmark.Features.Targets;
 using UnityEngine;
 using Zenject;

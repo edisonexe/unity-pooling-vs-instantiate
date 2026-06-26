@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Zenject;
 using IPoolable = PoolingBenchmark.Infrastructure.Pooling.IPoolable;
 
 namespace PoolingBenchmark.Features.Targets
