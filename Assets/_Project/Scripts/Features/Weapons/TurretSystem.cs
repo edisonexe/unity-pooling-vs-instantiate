@@ -15,17 +15,24 @@ namespace PoolingBenchmark.Features.Weapons
         private readonly IEntityFactory _factory;
         private readonly EntityRegistry _registry;
         private readonly SimulationConfig _config;
-
+        private readonly ISimulationController _controller;    
+        
         private TargetEntity _currentTarget;
         private float _fireTimer;
         private Quaternion _lookRotation;
 
-        public TurretSystem(TurretView view, IEntityFactory factory, EntityRegistry registry, SimulationConfig config)
+        public TurretSystem(
+            TurretView view, 
+            IEntityFactory factory, 
+            EntityRegistry registry, 
+            SimulationConfig config,
+            ISimulationController controller)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _config = config ?? throw new ArgumentNullException(nameof(config));
+            _controller = controller ?? throw new ArgumentNullException(nameof(controller));
 
             if (_view.YawRoot)
             {
@@ -35,6 +42,8 @@ namespace PoolingBenchmark.Features.Weapons
 
         public void Tick()
         {
+            if (!_controller.IsSimulationStarted) return;
+            
             Transform yawTransform = _view.YawRoot;
             if (!yawTransform) return;
 
