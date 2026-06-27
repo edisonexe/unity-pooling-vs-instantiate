@@ -13,6 +13,9 @@ namespace PoolingBenchmark.Features.Targets
         private float _speed;
         private TargetView _view; 
 
+        
+        public bool IsDead { get; private set; }
+        
         public Vector3 Position => _position;
         public Vector3 MoveDirection => _moveDirection;
         public float Speed => _speed;
@@ -36,6 +39,8 @@ namespace PoolingBenchmark.Features.Targets
             _speed = speed;
             _view = view;
             
+            IsDead = false;
+            
             _view.SetPosition(_position);
         }
 
@@ -55,12 +60,15 @@ namespace PoolingBenchmark.Features.Targets
 
         public void Despawn()
         {
+            if (IsDead) return;
+            IsDead = true;
             _onDespawn.Invoke(this);
         }
 
         public void Reset()
         {
             _view = null;
+            IsDead = false;
         }
     }
 }

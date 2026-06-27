@@ -16,6 +16,8 @@ namespace PoolingBenchmark.Features.Projectiles
         private Vector3 _position;
         private float _currentLifetime;
 
+        public bool IsDestroyed { get; private set; }
+        
         public Vector3 Direction => _direction;
         public float Speed => _speed;
         public float CurrentLifetime => _currentLifetime;
@@ -45,6 +47,8 @@ namespace PoolingBenchmark.Features.Projectiles
             _view = view;
             _currentLifetime = 0f;
 
+            IsDestroyed = false;
+            
             _view.Setup(_position, rotation);
         }
 
@@ -69,12 +73,15 @@ namespace PoolingBenchmark.Features.Projectiles
 
         public void Despawn()
         {
+            if (IsDestroyed) return;
+            IsDestroyed = true;
             _onDespawn.Invoke(this);
         }
 
         public void Reset()
         {
             _view = null; 
+            IsDestroyed = false;
         }
     }
 }

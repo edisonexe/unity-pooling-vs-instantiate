@@ -35,6 +35,8 @@ namespace PoolingBenchmark.Features.Targets
             {
                 TargetEntity t = targets[i];
                 
+                if (t.IsDead) continue;
+                
                 Vector3 newPosition = t.Position + t.MoveDirection * (t.Speed * deltaTime);
                 t.UpdatePosition(newPosition);
 

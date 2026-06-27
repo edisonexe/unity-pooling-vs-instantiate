@@ -65,6 +65,13 @@ namespace PoolingBenchmark.Features.Projectiles
                 for (int j = cellTargets.Count - 1; j >= 0; j--)
                 {
                     TargetEntity target = cellTargets[j];
+                    
+                    if (target.IsDead)
+                    {
+                        cellTargets.RemoveAt(j);
+                        continue;
+                    }
+                    
                     Vector3 targetPos = target.Position;
 
                     float deltaX = projPos.x - targetPos.x;
