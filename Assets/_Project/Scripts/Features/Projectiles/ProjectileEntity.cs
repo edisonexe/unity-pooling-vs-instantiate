@@ -1,15 +1,17 @@
 ﻿using System;
+using PoolingBenchmark.Infrastructure.Pooling;
 using UnityEngine;
 
 namespace PoolingBenchmark.Features.Projectiles
 {
-    public sealed class ProjectileEntity
+    public sealed class ProjectileEntity : IPocoPoolable
     {
         private readonly Action<ProjectileEntity> _onDespawn;
-        private readonly Vector3 _direction;
-        private readonly float _speed;
-        private readonly float _maxLifetime;
-        private readonly ProjectileView _view;
+        
+        private Vector3 _direction;
+        private float _speed;
+        private float _maxLifetime;
+        private ProjectileView _view;
 
         private Vector3 _position;
         private float _currentLifetime;
@@ -23,21 +25,25 @@ namespace PoolingBenchmark.Features.Projectiles
 
         public bool IsExpired => _currentLifetime >= _maxLifetime;
 
-        public ProjectileEntity(
-            Vector3 position, 
-            Quaternion rotation, 
-            Vector3 direction, 
-            float speed, 
-            float maxLifetime, 
-            ProjectileView view, 
-            Action<ProjectileEntity> onDespawn)
+        public ProjectileEntity(Action<ProjectileEntity> onDespawn)
         {
+            _onDespawn = onDespawn ?? throw new ArgumentNullException(nameof(onDespawn));
+        }
+
+        public void Initialize(Vector3 position, Quaternion rotation, Vector3 direction, float speed, float maxLifetime, ProjectileView view)
+        {
+            if (view == null)
+            {
+                Debug.LogError("[ProjectileEntity] ProjectileView passed into Initialize is NULL!");
+                return;
+            }
+
             _position = position;
             _direction = direction;
             _speed = speed;
             _maxLifetime = maxLifetime;
-            _view = view ?? throw new ArgumentNullException(nameof(view));
-            _onDespawn = onDespawn ?? throw new ArgumentNullException(nameof(onDespawn));
+            _view = view;
+            _currentLifetime = 0f;
 
             _view.Setup(_position, rotation);
         }
@@ -45,7 +51,15 @@ namespace PoolingBenchmark.Features.Projectiles
         public void UpdatePosition(Vector3 newPosition)
         {
             _position = newPosition;
-            _view.SetPosition(_position);
+
+            if (_view != null)
+            {
+                _view.SetPosition(_position);
+            }
+            else
+            {
+                Debug.LogError("[ProjectileEntity] Missing ProjectileView reference during UpdatePosition!");
+            }
         }
 
         public void AdvanceLifetime(float deltaTime)
@@ -56,6 +70,11 @@ namespace PoolingBenchmark.Features.Projectiles
         public void Despawn()
         {
             _onDespawn.Invoke(this);
+        }
+
+        public void Reset()
+        {
+            _view = null; 
         }
     }
 }

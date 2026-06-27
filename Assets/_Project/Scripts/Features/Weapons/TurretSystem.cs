@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.CoreSimulation.Services;
+using PoolingBenchmark.Features.Projectiles;
 using PoolingBenchmark.Features.Targets;
 using UnityEngine;
 using Zenject;
@@ -12,7 +13,7 @@ namespace PoolingBenchmark.Features.Weapons
     public sealed class TurretSystem : ITickable
     {
         private readonly TurretView _view;
-        private readonly IEntityFactory _factory;
+        private readonly ProjectileSimulationFacade _projectileSimulation;
         private readonly EntityRegistry _registry;
         private readonly SimulationConfig _config;
         private readonly ISimulationController _controller;    
@@ -23,13 +24,13 @@ namespace PoolingBenchmark.Features.Weapons
 
         public TurretSystem(
             TurretView view, 
-            IEntityFactory factory, 
+            ProjectileSimulationFacade projectileSimulation, 
             EntityRegistry registry, 
             SimulationConfig config,
             ISimulationController controller)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            _projectileSimulation = projectileSimulation ?? throw new ArgumentNullException(nameof(projectileSimulation));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _controller = controller ?? throw new ArgumentNullException(nameof(controller));
@@ -71,7 +72,13 @@ namespace PoolingBenchmark.Features.Weapons
             {
                 _fireTimer -= _config.FireRate;
                 
-                _factory.CreateProjectile(_view.ShootingPoint.position, yawTransform.rotation, yawTransform.forward);
+                _projectileSimulation.Spawn(
+                    _view.ShootingPoint.position, 
+                    yawTransform.rotation, 
+                    yawTransform.forward, 
+                    _config.ProjectileSpeed, 
+                    _config.ProjectileMaxLifetime
+                );
             }
         }
 

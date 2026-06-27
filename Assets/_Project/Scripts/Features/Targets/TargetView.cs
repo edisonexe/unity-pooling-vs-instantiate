@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using IPoolable = PoolingBenchmark.Infrastructure.Pooling.IPoolable;
+﻿using PoolingBenchmark.Infrastructure.Pooling;
+using UnityEngine;
 
 namespace PoolingBenchmark.Features.Targets
 {
     [AddComponentMenu("PoolingBenchmark/Views/Target View")]
-    public sealed class TargetView : MonoBehaviour, IPoolable
+    public sealed class TargetView : MonoBehaviour, IMonoBehaviourPoolable
     {
         private Transform _transform;
 

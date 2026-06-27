@@ -1,4 +1,5 @@
-﻿using PoolingBenchmark.Features.CoreSimulation.Configs;
+﻿using System;
+using PoolingBenchmark.Features.CoreSimulation.Configs;
 using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.CoreSimulation.Services;
 using PoolingBenchmark.Features.Environment;
@@ -45,7 +46,18 @@ namespace PoolingBenchmark.Infrastructure.DI
             Container.BindInterfacesAndSelfTo<SimulationContainers>().FromInstance(_containers).AsSingle();
             Container.BindInterfacesAndSelfTo<PoolService>().FromInstance(_poolService).AsSingle();
 
+            Container.Bind<Func<Action<ProjectileEntity>, ProjectileEntity>>()
+                .FromInstance(onDespawn => new ProjectileEntity(onDespawn))
+                .AsTransient();
+            Container.Bind<Func<Action<TargetEntity>, TargetEntity>>()
+                .FromInstance(onDespawn => new TargetEntity(onDespawn))
+                .AsTransient();
+            
             Container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<TargetSimulationFacade>().AsSingle().WithArguments(_config.PrewarmCount);
+            Container.BindInterfacesAndSelfTo<ProjectileSimulationFacade>().AsSingle().WithArguments(_config.PrewarmCount);
+            
             Container.Bind<ISimulationController>().To<SimulationController>().AsSingle();
             Container.Bind<TurretView>().FromInstance(_turretView).AsSingle();
             

@@ -4,7 +4,7 @@ using PoolingBenchmark.Infrastructure.Pooling;
 namespace PoolingBenchmark.Features.Projectiles
 {
     [AddComponentMenu("PoolingBenchmark/Views/Projectile View")]
-    public sealed class ProjectileView : MonoBehaviour, IPoolable
+    public sealed class ProjectileView : MonoBehaviour, IMonoBehaviourPoolable
     {
         private Transform _transform;
 

@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: SimulationConfig
   m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Domain.SimulationConfig
   _prewarmCount: 5000
-  _spawnInterval: 0.0025
-  _fireRate: 0.001
+  _spawnInterval: 0.001
+  _fireRate: 0.0008
   _fovAngle: 120
-  _spawnPointsCacheSize: 2000
+  _targetSpeed: 5
+  _projectileSpeed: 20
+  _projectileMaxLifetime: 3
   _hitRadius: 0.75
   _gridCellSize: 2

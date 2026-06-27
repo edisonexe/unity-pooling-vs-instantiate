@@ -1,10 +1,10 @@
 ﻿using System;
 using PoolingBenchmark.Features.CoreSimulation;
-using PoolingBenchmark.Features.CoreSimulation.Interfaces;
 using PoolingBenchmark.Features.CoreSimulation.Services;
 using PoolingBenchmark.Features.PerformanceStats.Interfaces;
 using PoolingBenchmark.Features.PerformanceStats.Models;
-using PoolingBenchmark.Infrastructure;
+using PoolingBenchmark.Features.Projectiles;
+using PoolingBenchmark.Features.Targets;
 using PoolingBenchmark.Infrastructure.Pooling;
 using Zenject;
 
@@ -12,11 +12,12 @@ namespace PoolingBenchmark.Features.PerformanceStats.Services
 {
     public sealed class StatsCollector : IStatsProvider, ITickable, IDisposable
     {
-        private const float UPDATE_INTERVAL = 0.1f;
+        private const float UPDATE_INTERVAL = 0.25f;
 
         private readonly PoolService _pools;
         private readonly EntityRegistry _registry;
-        private readonly IEntityFactory _entityFactory;
+        private readonly TargetSimulationFacade _targetSimulation;
+        private readonly ProjectileSimulationFacade _projectileSimulation;
         
         private ExecutionMode _currentMode;
         private float _timer;
@@ -24,11 +25,16 @@ namespace PoolingBenchmark.Features.PerformanceStats.Services
 
         public event Action<SimulationStats> OnStatsChanged;
 
-        public StatsCollector(PoolService pools, EntityRegistry registry, IEntityFactory entityFactory)
+        public StatsCollector(
+            PoolService pools, 
+            EntityRegistry registry, 
+            TargetSimulationFacade targetSimulation, 
+            ProjectileSimulationFacade projectileSimulation)
         {
             _pools = pools ?? throw new ArgumentNullException(nameof(pools));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
-            _entityFactory = entityFactory ?? throw new ArgumentNullException(nameof(entityFactory));
+            _targetSimulation = targetSimulation ?? throw new ArgumentNullException(nameof(targetSimulation));
+            _projectileSimulation = projectileSimulation ?? throw new ArgumentNullException(nameof(projectileSimulation));
 
             _registry.OnChanged += SetDirty;
         }
@@ -56,8 +62,8 @@ namespace PoolingBenchmark.Features.PerformanceStats.Services
         {
             bool isPool = _currentMode == ExecutionMode.Pool;
             
-            int totalProjs = isPool ? _pools.ProjectilePool.TotalCreated : _entityFactory.ProjNaiveCounter;
-            int totalTargets = isPool ? _pools.TargetPool.TotalCreated : _entityFactory.TargetNaiveCounter;
+            int totalProjs = isPool ? _pools.ProjectilePool.TotalCreated : _projectileSimulation.NaiveCounter;
+            int totalTargets = isPool ? _pools.TargetPool.TotalCreated : _targetSimulation.NaiveCounter;
 
             SimulationStats stats = new SimulationStats(
                 _currentMode,
