@@ -2610,7 +2610,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2092598882}
   - {fileID: 692590964}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3322,7 +3321,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Bootstrap.SimulationInstaller
   _config: {fileID: 11400000, guid: db7b7d788325bb24ca51fb3b53f93010, type: 2}
-  _poolService: {fileID: 2092598883}
+  _projectilePrefab: {fileID: 2175902949974084500, guid: 08d422363bd66fd4980abac3965dca06, type: 3}
+  _targetPrefab: {fileID: 8316145682860978767, guid: 1120276a1292f834ea17edf3133071c8, type: 3}
   _containers: {fileID: 1108755600}
   _turretView: {fileID: 1475913944}
   _startScreenView: {fileID: 1462059408}
@@ -4145,52 +4145,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1947586619}
   m_CullTransparentMesh: 1
---- !u!1 &2092598880
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2092598882}
-  - component: {fileID: 2092598883}
-  m_Layer: 0
-  m_Name: Pool Service
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2092598882
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092598880}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1436905645}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2092598883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092598880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d9b189278c452bb600a2512f3473ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PoolingBenchmark.Gameplay.Systems.PoolSystem
-  _projectilePrefab: {fileID: 2175902949974084500, guid: 08d422363bd66fd4980abac3965dca06, type: 3}
-  _targetPrefab: {fileID: 8316145682860978767, guid: 1120276a1292f834ea17edf3133071c8, type: 3}
 --- !u!1 &2123644795
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,8 +21,11 @@ namespace PoolingBenchmark.Infrastructure.DI
         [Header("Configurations")]
         [SerializeField] private SimulationConfig _config;
 
+        [Header("Prefabs Configuration")]
+        [SerializeField] private ProjectileView _projectilePrefab;
+        [SerializeField] private TargetView _targetPrefab;
+        
         [Header("Scene Component Contexts")]
-        [SerializeField] private PoolService _poolService;
         [SerializeField] private SimulationContainers _containers;
         [SerializeField] private TurretView _turretView;
         
@@ -41,10 +44,13 @@ namespace PoolingBenchmark.Infrastructure.DI
             Container.BindInstance(_config).AsSingle();
             Container.Bind<EntityRegistry>().AsSingle();
 
+            Container.BindInstance(_projectilePrefab).AsSingle();
+            Container.BindInstance(_targetPrefab).AsSingle();
+            
             Container.BindInterfacesAndSelfTo<ArenaBoundary>().FromInstance(_arenaBoundary).AsSingle();
             Container.Bind<SpatialGrid>().AsSingle().WithArguments(_config.GridCellSize);
             Container.BindInterfacesAndSelfTo<SimulationContainers>().FromInstance(_containers).AsSingle();
-            Container.BindInterfacesAndSelfTo<PoolService>().FromInstance(_poolService).AsSingle();
+            Container.Bind<PoolService>().AsSingle();
 
             Container.Bind<Func<Action<ProjectileEntity>, ProjectileEntity>>()
                 .FromInstance(onDespawn => new ProjectileEntity(onDespawn))
@@ -79,8 +85,9 @@ namespace PoolingBenchmark.Infrastructure.DI
         private void ValidateContexts()
         {
             if (!_config) Debug.LogError("[SimulationInstaller] SimulationConfig Asset is missing!", this);
+            if (!_projectilePrefab) Debug.LogError("[SimulationInstaller] Projectile Prefab is missing in Installer!", this);
+            if (!_targetPrefab) Debug.LogError("[SimulationInstaller] Target Prefab is missing in Installer!", this);
             if (!_containers) Debug.LogError("[SimulationInstaller] SimulationContainers reference is missing!", this);
-            if (!_poolService) Debug.LogError("[SimulationInstaller] PoolService reference is missing!", this);
             if (!_turretView) Debug.LogError("[SimulationInstaller] TurretView reference is missing!", this);
             if (!_startScreenView) Debug.LogError("[SimulationInstaller] StartScreenView reference is missing!", this);
             if (!_controlPanelView) Debug.LogError("[SimulationInstaller] ControlPanelView reference is missing!", this);

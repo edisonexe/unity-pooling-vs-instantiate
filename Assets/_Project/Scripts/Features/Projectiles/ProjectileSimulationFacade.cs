@@ -15,6 +15,7 @@ namespace PoolingBenchmark.Features.Projectiles
         private readonly EntityRegistry _registry;
         private readonly SimulationContainers _containers;
         private readonly IEntityFactory _factory;
+        private readonly ProjectileView _prefab;
         private readonly int _prewarmCount;
 
         private ExecutionMode _mode;
@@ -30,12 +31,14 @@ namespace PoolingBenchmark.Features.Projectiles
             PoolService viewPools,
             EntityRegistry registry,
             SimulationContainers containers,
+            ProjectileView prefab,
             int prewarmCount)
         {
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _viewPools = viewPools ?? throw new ArgumentNullException(nameof(viewPools));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _containers = containers ?? throw new ArgumentNullException(nameof(containers));
+            _prefab = prefab ?? throw new ArgumentNullException(nameof(prefab));
             _prewarmCount = prewarmCount;
 
             _projectilePocoPool = new PocoObjectPool<ProjectileEntity>(_factory.CreateProjectile, _prewarmCount);
@@ -64,7 +67,7 @@ namespace PoolingBenchmark.Features.Projectiles
             }
             else
             {
-                view = UnityEngine.Object.Instantiate(_viewPools.ProjectilePool.Prefab, _containers.ProjectileContainer);
+                view = UnityEngine.Object.Instantiate(_prefab, _containers.ProjectileContainer);
                 _naiveCounter++;
                 view.Show();
             }

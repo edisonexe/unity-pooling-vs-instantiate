@@ -15,6 +15,7 @@ namespace PoolingBenchmark.Features.Targets
         private readonly EntityRegistry _registry;
         private readonly SimulationContainers _containers;
         private readonly IEntityFactory _factory;
+        private readonly TargetView _prefab;
         private readonly int _prewarmCount;
 
         private ExecutionMode _mode;
@@ -30,12 +31,14 @@ namespace PoolingBenchmark.Features.Targets
             PoolService viewPools,
             EntityRegistry registry,
             SimulationContainers containers,
+            TargetView prefab,
             int prewarmCount)
         {
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _viewPools = viewPools ?? throw new ArgumentNullException(nameof(viewPools));
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             _containers = containers ?? throw new ArgumentNullException(nameof(containers));
+            _prefab =  prefab ?? throw new ArgumentNullException(nameof(prefab));
             _prewarmCount = prewarmCount;
 
             _targetPocoPool = new PocoObjectPool<TargetEntity>(_factory.CreateTarget, _prewarmCount);
@@ -64,7 +67,7 @@ namespace PoolingBenchmark.Features.Targets
             }
             else
             {
-                view = UnityEngine.Object.Instantiate(_viewPools.TargetPool.Prefab, _containers.TargetContainer);
+                view = UnityEngine.Object.Instantiate(_prefab, _containers.TargetContainer);
                 _naiveCounter++;
                 view.Show();
             }
