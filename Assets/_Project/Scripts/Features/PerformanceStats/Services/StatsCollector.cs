@@ -62,8 +62,14 @@ namespace PoolingBenchmark.Features.PerformanceStats.Services
         {
             bool isPool = _currentMode == ExecutionMode.Pool;
             
-            int totalProjs = isPool ? _pools.ProjectilePool.TotalCreated : _projectileSimulation.NaiveCounter;
-            int totalTargets = isPool ? _pools.TargetPool.TotalCreated : _targetSimulation.NaiveCounter;
+            int totalProjs = isPool ? _projectileSimulation.TotalPoolSize : _projectileSimulation.NaiveCounter;
+            int totalTargets = isPool ? _targetSimulation.TotalPoolSize : _targetSimulation.NaiveCounter;
+
+            int availableProjs = isPool ? _projectileSimulation.AvailableCount : 0;
+            int availableTargets = isPool ? _targetSimulation.AvailableCount : 0;
+            
+            int reusedProjs = isPool && _pools.ProjectilePool != null ? _pools.ProjectilePool.ReusedCount : 0;
+            int reusedTargets = isPool && _pools.TargetPool != null ? _pools.TargetPool.ReusedCount : 0;
 
             SimulationStats stats = new SimulationStats(
                 _currentMode,
@@ -71,12 +77,12 @@ namespace PoolingBenchmark.Features.PerformanceStats.Services
                 _registry.Targets.Count,
                 totalProjs,                               
                 totalTargets,                             
-                _pools.ProjectilePool.TotalCreated,       
-                _pools.TargetPool.TotalCreated,         
-                _pools.ProjectilePool.AvailableCount,
-                _pools.TargetPool.AvailableCount,
-                _pools.ProjectilePool.ReusedCount,
-                _pools.TargetPool.ReusedCount
+                totalProjs,       
+                totalTargets,     
+                availableProjs,    
+                availableTargets,  
+                reusedProjs,       
+                reusedTargets      
             );
 
             OnStatsChanged?.Invoke(stats);

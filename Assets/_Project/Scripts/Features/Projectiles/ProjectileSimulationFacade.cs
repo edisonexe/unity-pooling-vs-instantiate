@@ -21,6 +21,8 @@ namespace PoolingBenchmark.Features.Projectiles
         private int _naiveCounter;
 
         public int NaiveCounter => _naiveCounter;
+        public int TotalPoolSize => _projectilePocoPool.TotalCreated;
+        public int AvailableCount => _projectilePocoPool.AvailableCount;
         public PocoObjectPool<ProjectileEntity> PocoPool => _projectilePocoPool;
 
         public ProjectileSimulationFacade(

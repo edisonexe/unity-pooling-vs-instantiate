@@ -21,6 +21,8 @@ namespace PoolingBenchmark.Features.Targets
         private int _naiveCounter;
 
         public int NaiveCounter => _naiveCounter;
+        public int TotalPoolSize => _targetPocoPool.TotalCreated;
+        public int AvailableCount => _targetPocoPool.AvailableCount;
         public PocoObjectPool<TargetEntity> PocoPool => _targetPocoPool;
 
         public TargetSimulationFacade(
