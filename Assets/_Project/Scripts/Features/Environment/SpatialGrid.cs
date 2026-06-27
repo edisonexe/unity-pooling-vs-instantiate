@@ -21,6 +21,13 @@ namespace PoolingBenchmark.Features.Environment
         public void Clear()
         {
             _buckets.Clear();
+            
+            int allocatedCount = _allocatedLists.Count;
+            for (int i = 0; i < allocatedCount; i++)
+            {
+                _allocatedLists[i].Clear();
+            }
+    
             _listPoolIndex = 0;
         }
 

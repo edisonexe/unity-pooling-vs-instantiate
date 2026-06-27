@@ -8,7 +8,7 @@ using Zenject;
 
 namespace PoolingBenchmark.Features.Targets
 {
-    public sealed class TargetSimulationFacade : IInitializable
+    public sealed class TargetSimulationFacade
     {
         private readonly PocoObjectPool<TargetEntity> _targetPocoPool;
         private readonly PoolService _viewPools;
@@ -49,10 +49,7 @@ namespace PoolingBenchmark.Features.Targets
             }
         }
 
-        public void Initialize()
-        {
-            _targetPocoPool.Prewarm(_prewarmCount);
-        }
+        public void Prewarm() => _targetPocoPool.Prewarm(_prewarmCount);
 
         public void SetMode(ExecutionMode mode) => _mode = mode;
         public void ResetCounter() => _naiveCounter = 0;

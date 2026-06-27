@@ -14,6 +14,7 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
         private readonly StatsCollector _collector;
         private readonly TargetSpawner _spawner;
         private readonly PoolService _pools;
+        private readonly EntityRegistry _registry;
 
         private ExecutionMode _currentMode = ExecutionMode.Naive;
         private bool _isSimulationStarted;
@@ -26,13 +27,15 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             ProjectileSimulationFacade projectileSimulation,
             StatsCollector collector, 
             TargetSpawner spawner, 
-            PoolService pools)
+            PoolService pools,
+            EntityRegistry registry)
         {
             _targetSimulation = targetSimulation ?? throw new ArgumentNullException(nameof(targetSimulation));
             _projectileSimulation = projectileSimulation ?? throw new ArgumentNullException(nameof(projectileSimulation));
             _collector = collector ?? throw new ArgumentNullException(nameof(collector));
             _spawner = spawner ?? throw new ArgumentNullException(nameof(spawner));
             _pools = pools ?? throw new ArgumentNullException(nameof(pools));
+            _registry = registry ?? throw new ArgumentNullException(nameof(registry));
             
             ApplyMode(_currentMode);
         }
@@ -51,6 +54,14 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
         {
             _spawner.StopSpawning();
 
+            if (_registry != null)
+            {
+                _registry.Clear(
+                    _projectileSimulation.RecycleProjectile, 
+                    _targetSimulation.RecycleTarget
+                );
+            }
+            
             _projectileSimulation.PocoPool.Clear();
             _targetSimulation.PocoPool.Clear();
             _pools.ClearPools();
@@ -66,6 +77,8 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             if (mode == ExecutionMode.Pool)
             {
                 _pools.Prewarm();
+                _targetSimulation.Prewarm();
+                _projectileSimulation.Prewarm();
             }
 
             _targetSimulation.SetMode(mode);

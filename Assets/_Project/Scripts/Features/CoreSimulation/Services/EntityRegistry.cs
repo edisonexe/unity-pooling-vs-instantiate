@@ -72,12 +72,26 @@ namespace PoolingBenchmark.Features.CoreSimulation.Services
             OnChanged?.Invoke();
         }
 
-        public void Clear()
+        public void Clear(Action<ProjectileEntity> disposeProjectile, Action<TargetEntity> disposeTarget)
         {
+            if (disposeProjectile == null) throw new ArgumentNullException(nameof(disposeProjectile));
+            if (disposeTarget == null) throw new ArgumentNullException(nameof(disposeTarget));
+            
+            for (int i = _projectiles.Count - 1; i >= 0; i--)
+            {
+                disposeProjectile.Invoke(_projectiles[i]);
+            }
+            
+            for (int i = _targets.Count - 1; i >= 0; i--)
+            {
+                disposeTarget.Invoke(_targets[i]);
+            }
+            
             _projectiles.Clear();
             _targets.Clear();
             _projectileIndices.Clear();
             _targetIndices.Clear();
+            
             OnChanged?.Invoke();
         }
     }

@@ -61,8 +61,8 @@ namespace PoolingBenchmark.Infrastructure.DI
             
             Container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
             
-            Container.BindInterfacesAndSelfTo<TargetSimulationFacade>().AsSingle().WithArguments(_config.PrewarmCount);
-            Container.BindInterfacesAndSelfTo<ProjectileSimulationFacade>().AsSingle().WithArguments(_config.PrewarmCount);
+            Container.Bind<TargetSimulationFacade>().AsSingle().WithArguments(_config.PrewarmCount);
+            Container.Bind<ProjectileSimulationFacade>().AsSingle().WithArguments(_config.PrewarmCount);
             
             Container.Bind<ISimulationController>().To<SimulationController>().AsSingle();
             Container.Bind<TurretView>().FromInstance(_turretView).AsSingle();

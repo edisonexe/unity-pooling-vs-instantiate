@@ -52,6 +52,7 @@ namespace PoolingBenchmark.Infrastructure.Pooling
         public void Clear()
         {
             _pool.Clear();
+            TotalCreated = 0;
         }
     }
 }
