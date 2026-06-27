@@ -5,18 +5,21 @@ using Object = UnityEngine.Object;
 
 namespace PoolingBenchmark.Infrastructure.Pooling
 {
-    public sealed class ObjectPool<T> where T : MonoBehaviour, IPoolable
+    public sealed class MonoBehaviourObjectPool<T> where T : MonoBehaviour, IMonoBehaviourPoolable
     {
         private readonly T _prefab;
         private readonly Transform _parent;
         private readonly Queue<T> _pool;
 
+        private int _totalCreated;
+        private int _reusedCount;
+
         public T Prefab => _prefab;
-        public int TotalCreated { get; private set; }
-        public int ReusedCount { get; private set; }
+        public int TotalCreated => _totalCreated;
+        public int ReusedCount => _reusedCount;
         public int AvailableCount => _pool.Count;
 
-        public ObjectPool(T prefab, Transform parent)
+        public MonoBehaviourObjectPool(T prefab, Transform parent)
         {
             _prefab = prefab ?? throw new ArgumentNullException(nameof(prefab));
             _parent = parent ?? throw new ArgumentNullException(nameof(parent));
@@ -37,7 +40,7 @@ namespace PoolingBenchmark.Infrastructure.Pooling
             if (_pool.Count > 0)
             {
                 item = _pool.Dequeue();
-                ReusedCount++;
+                _reusedCount++;
             }
             else
             {
@@ -57,11 +60,26 @@ namespace PoolingBenchmark.Infrastructure.Pooling
             _pool.Enqueue(item);
         }
 
+        public void Clear()
+        {
+            while (_pool.Count > 0)
+            {
+                T item = _pool.Dequeue();
+                if (item != null && item.gameObject != null)
+                {
+                    Object.Destroy(item.gameObject);
+                }
+            }
+
+            _totalCreated = 0;
+            _reusedCount = 0;
+        }
+
         private T CreateInternal()
         {
             T item = Object.Instantiate(_prefab, _parent);
             item.gameObject.SetActive(false);
-            TotalCreated++;
+            _totalCreated++;
             return item;
         }
     }

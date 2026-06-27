@@ -18,8 +18,8 @@ namespace PoolingBenchmark.Infrastructure.Pooling
         private SimulationContainers _containers;
         private bool _isPrewarmed;
 
-        public ObjectPool<ProjectileView> ProjectilePool { get; private set; }
-        public ObjectPool<TargetView> TargetPool { get; private set; }
+        public MonoBehaviourObjectPool<ProjectileView> ProjectilePool { get; private set; }
+        public MonoBehaviourObjectPool<TargetView> TargetPool { get; private set; }
 
         [Inject]
         public void Init(SimulationConfig config, SimulationContainers containers)
@@ -32,8 +32,8 @@ namespace PoolingBenchmark.Infrastructure.Pooling
         {
             ValidateContexts();
             
-            ProjectilePool = new ObjectPool<ProjectileView>(_projectilePrefab, _containers.ProjectileContainer);
-            TargetPool = new ObjectPool<TargetView>(_targetPrefab, _containers.TargetContainer);
+            ProjectilePool = new MonoBehaviourObjectPool<ProjectileView>(_projectilePrefab, _containers.ProjectileContainer);
+            TargetPool = new MonoBehaviourObjectPool<TargetView>(_targetPrefab, _containers.TargetContainer);
         }
 
         public void Prewarm()
@@ -43,6 +43,14 @@ namespace PoolingBenchmark.Infrastructure.Pooling
             ProjectilePool.Prewarm(_config.PrewarmCount);
             TargetPool.Prewarm(_config.PrewarmCount);
             _isPrewarmed = true;
+        }
+
+        public void ClearPools()
+        {
+            if (ProjectilePool != null) ProjectilePool.Clear();
+            if (TargetPool != null) TargetPool.Clear();
+            
+            _isPrewarmed = false;
         }
         
         private void ValidateContexts()

@@ -1,6 +1,6 @@
 ﻿namespace PoolingBenchmark.Infrastructure.Pooling
 {
-    public interface IPoolable
+    public interface IMonoBehaviourPoolable
     {
         void OnSpawn();
         void OnDespawn();
