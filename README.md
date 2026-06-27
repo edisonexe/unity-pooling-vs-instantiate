@@ -8,7 +8,7 @@
 
 Посмотреть демо прямо в браузере можно здесь: [тык](https://ray-rid.itch.io/pooling-benchmark)
 
-![Benchmark Demo]()
+![Benchmark Demo](https://github.com/user-attachments/assets/cd7657ce-b72d-4149-99ee-5004b72f032c)
 
 ---
 
@@ -30,12 +30,12 @@
 
 ## Демонстрация работы
 
-![Naive Demo](https://github.com/user-attachments/assets/e3832206-9027-46e6-8f28-17cd918223e7)
+![Naive Demo](https://github.com/user-attachments/assets/e64c638b-64b3-4a45-8898-e2c88c3ebc3d)
 ![Naive Profiler](https://github.com/user-attachments/assets/ab3d5589-c77d-4482-b310-835adaef4b15)
 
 * В **Naive Mode** отчетливо видно, что аллокации `Instantiate` выполняются каждый кадр, непрерывно засоряя управляемую кучу и провоцируя всплески сборщика мусора. Тысячи игровых объектов бесполезно создаются и уничтожаются в рантайме, совершенно не переиспользуясь между собой.
 
-![Pool Demo](https://github.com/user-attachments/assets/d6e6e490-a1f5-441a-a006-7e449c00b038)
+![Pool Demo](https://github.com/user-attachments/assets/55021683-39fe-4a5f-91f7-3b3e127ca874)
 ![Pool Profiler](https://github.com/user-attachments/assets/f71af777-03ee-455d-af79-cad060c3979c)
 
 * В **Pool Mode** график аллокаций остается идеально чистым, что позволяет полностью разгрузить процессор от накладных расходов на менеджмент памяти. Отчетливо заметно массовое и эффективное повторное использование уже прогретых в памяти сущностей без выделения новых ресурсов.
